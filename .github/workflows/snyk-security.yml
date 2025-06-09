@@ -16,18 +16,20 @@
 # For more examples, including how to limit scans to only high-severity issues
 # and fail PR checks, see https://github.com/snyk/actions/
 
-name: Snyk example
-on: push
+name: "snyk test"
+on: [push, pull_request]
 jobs:
-  security:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: snyk/actions/setup@main
-      - uses: actions/setup-go@v1
-        with:
-          go-version: '1.13'
-      - name: Snyk monitor
-        run: snyk test
+      - uses: snyk/actions/setup@master
+      - name: Snyk Test
+        run: snyk test --sarif-file-output=snyk-sarif1.json
+        continue-on-error: true
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk-sarif1.json
