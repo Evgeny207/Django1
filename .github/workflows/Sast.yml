@@ -1,10 +1,11 @@
-sast:
+name: sast
 on: push
 
 jobs:
  runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v4
+    - name: chec
+      uses: actions/checkout@v4
 
     - name: Run Bandit
       uses: PyCQA/bandit@main
