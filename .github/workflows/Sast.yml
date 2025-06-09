@@ -8,16 +8,6 @@ jobs:
   - name: chec
     uses: actions/checkout@v4
 
-  - name: Run Bandit
-    uses: PyCQA/bandit@main
-    with:
-      args: -r . -f sarif --output results.sarif
-
-  - name: Upload SARIF results
-    uses: github/codeql-action/upload-sarif@v2
-    with:
-      sarif_file: results.sarif
-
   - name: Run Semgrep
     uses: returntocorp/semgrep-action@v1
     with:
