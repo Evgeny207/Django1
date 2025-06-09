@@ -1,6 +1,7 @@
 sast:
 on: push
   runs-on: ubuntu-latest
+jobs:
   steps:
     - uses: actions/checkout@v4
 
