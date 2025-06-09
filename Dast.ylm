@@ -1,0 +1,17 @@
+dast:
+on: push
+jobs:
+  deploy:
+  runs-on: ubuntu-latest
+  needs: deploy
+  steps:
+    - name: OWASP ZAP Scan
+      uses: zaproxy/action-full-scan@v0.6
+      with:
+        target: 'http://staging.example.com'
+        rules: all
+
+    - name: StackHawk
+      uses: stackhawk/hawkscan-action@v1
+      env:
+        HAWK_API_KEY: ${{ secrets.HAWK_API_KEY }}
