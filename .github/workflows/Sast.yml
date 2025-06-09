@@ -3,24 +3,24 @@ on: push
 
 jobs:
  runs-on: ubuntu-latest
-  steps:
-    - name: chec
-      uses: actions/checkout@v4
+ steps:
+  - name: chec
+    uses: actions/checkout@v4
 
-    - name: Run Bandit
-      uses: PyCQA/bandit@main
-      with:
-        args: -r . -f sarif --output results.sarif
+  - name: Run Bandit
+    uses: PyCQA/bandit@main
+    with:
+      args: -r . -f sarif --output results.sarif
 
-    - name: Upload SARIF results
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: results.sarif
+  - name: Upload SARIF results
+    uses: github/codeql-action/upload-sarif@v2
+    with:
+      sarif_file: results.sarif
 
-    - name: Run Semgrep
-      uses: returntocorp/semgrep-action@v1
-      with:
-        config: p/python
+  - name: Run Semgrep
+    uses: returntocorp/semgrep-action@v1
+    with:
+      config: p/python
 
-    - name: Dependency check
-      uses: dependabot/fetch-metadata@v2
+  - name: Dependency check
+    uses: dependabot/fetch-metadata@v2
