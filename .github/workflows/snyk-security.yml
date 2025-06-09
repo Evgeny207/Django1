@@ -23,13 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: snyk/actions/maven@master
+      - uses: snyk/actions/setup@master
       - name: Snyk Test
-        run: snyk test --sarif-file-output=snyk-sarif1.json
+        run: snyk test
         continue-on-error: true
         env:
            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk-sarif1.json
+      
