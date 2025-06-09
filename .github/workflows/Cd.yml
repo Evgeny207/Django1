@@ -1,32 +1,36 @@
-name: Secure Pipeline
-on: [push, pull_request]
+name: CI/CD Pipeline
+on: push
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+         - name: Build the project
+           run: |
+             echo "Building the project..."
+             docker build -t defectdojo .
 
-      - name: Build Docker image
-        run: docker build -t defectdojo:latest .
+  test:
+       runs-on: ubuntu-latest
+       needs: build
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
+
+         - name: Run tests
+           run: |
+             echo "Running tests..."
+             docker run defectdojo pytest
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_IP }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            docker pull defectdojo:latest
-            docker-compose up -d
+      runs-on: ubuntu-latest
+      needs: test
+      steps:
+         - name: Deploy to production
+           run: |
+             echo "Deploying to production..."
+             ssh user@vps "docker run -d --rm --name defectdojo -p 8000:8000 defectdojo"
+
